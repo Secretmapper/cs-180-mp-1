@@ -62,7 +62,7 @@ def generate_grid(width=100, height=100):
     return np.array(grid, dtype=np.uint8), (sx, sy), (ex, ey)
 
 def add_polygon_to_grid(grid, polygon, pos=(0, 0)):
-    x, y = pos
+    y, x = pos
     grid[x:x + polygon.shape[0], y:y + polygon.shape[1]] = polygon
 
 def generate_rectangle(width, height):
