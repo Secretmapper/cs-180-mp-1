@@ -1,14 +1,32 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+from matplotlib.patches import Rectangle
 
 def generate_anim(grid, start, end, path=[], expansion=[]):
-    fig = plt.figure()
-    imgs = []
-    for i in range(len(expansion)):
-        img = generate_grid_image(grid, start, end, path, expansion[:i])
-        imgs.append([plt.imshow(img, animated=True)])
-    return animation.ArtistAnimation(fig, imgs, interval=50, blit=True, repeat_delay=1000)
+    fig, ax = plt.subplots()
+    fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
+
+    img = generate_grid_image(grid, start, end, path, expansion[:1])
+    ax.imshow(img)
+
+    squares = [Rectangle((coord[0] - 0.5, coord[1] - 0.5), 1, 1, color='black') for coord in expansion]
+    for sq in squares:
+        sq.set_alpha(0)
+        ax.add_patch(sq)
+
+    frames = 15
+    multiple = int(len(expansion) / frames)
+
+    def init():
+        return squares
+
+    def update(i):
+        for j in range(i * multiple, (i + 1) * multiple):
+            squares[j].set_alpha(0.3)
+        return squares
+
+    return animation.FuncAnimation(fig, update, frames, blit=True, interval=100, init_func=init)
 
 def generate_grid_image(grid, start, end, path=[], expansion=[]):
     r = g = b = (grid * 255).astype(np.uint8)
