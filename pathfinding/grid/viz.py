@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib.patches import Rectangle
 
-def generate_anim(grid, start, end, path=[], expansion=[]):
+def generate_anim(grid, start, end, path=[], expansion=[], frames=15):
     fig, ax = plt.subplots()
     fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
 
@@ -15,7 +15,6 @@ def generate_anim(grid, start, end, path=[], expansion=[]):
         sq.set_alpha(0)
         ax.add_patch(sq)
 
-    frames = 15
     multiple = int(len(expansion) / frames)
 
     def init():
