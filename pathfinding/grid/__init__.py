@@ -30,3 +30,19 @@ def generate_rectangle(width, height):
     rect[..., 0] = np.zeros(height, dtype=np.uint8)
     rect[..., -1] = np.zeros(height, dtype=np.uint8)
     return rect
+
+def generate_line(p0, p1):
+    x0, y0 = p0[0], p0[1]
+    x1, y1 = p1[0], p1[1]
+    dx, dy = x1 - x0, y1- y0
+    d_err = abs(dy / dx)
+    err = 0
+    y = y0
+    grid = np.ones((abs(dy), abs(dx)))
+    for x in range(x0, x1):
+        grid[y][x] = 0
+        err = err + d_err
+        if err >= 0.5:
+            y = y + np.sign(dy) * 1
+            err = err - 1.0
+    return grid
