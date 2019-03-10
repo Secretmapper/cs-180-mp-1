@@ -17,3 +17,6 @@ def find_neighbors(grid, node):
         neighbors.append((node[0], node[1] + 1))
 
     return neighbors
+
+def is_coord_walkable(grid, node):
+    return grid[node[1], node[0]] == 1
