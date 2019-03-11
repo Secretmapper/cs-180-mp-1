@@ -23,6 +23,10 @@ def add_polygon(grid, polygon, pos=(0, 0)):
     y, x = pos
     grid[x:x + polygon.shape[0], y:y + polygon.shape[1]] = polygon
 
+def add_points(grid, points):
+    for coord in points:
+        grid[coord[1]][coord[0]] = 0
+
 def generate_rectangle(width, height):
     rect = np.ones((height, width), dtype=np.uint8)
     rect[0] = np.zeros(width, dtype=np.uint8)
@@ -35,23 +39,23 @@ def generate_line(p0, p1):
     x0, y0 = p0[0], p0[1]
     x1, y1 = p1[0], p1[1]
     dx, dy = x1 - x0, y1 - y0
+    points = []
     # handle horiz/vertical line manually
     if dx == 0 or dy == 0:
         if dy == 0 and dx == 0:
-            return np.ones((0, 0), dtype=np.uint8)
+            pass
         elif dy == 0:
-            return np.zeros((abs(1), abs(dx)), dtype=np.uint8)
+            points = [(x, y0) for x in range(min(x0, x1), max(x0, x1) + 1)]
         elif dx == 0:
-            return np.zeros((abs(dy), abs(1)), dtype=np.uint8)
+            points = [(x0, y) for y in range(min(y0, y1), max(y0, y1) + 1)]
     else:
         d_err = abs(dy / float(dx))
         err = 0
         y = y0
-        grid = np.ones((abs(dy), abs(dx)), dtype=np.uint8)
         for x in range(x0, x1):
-            grid[y][x] = 0
+            points.append((x, y))
             err = err + d_err
             if err >= 0.5:
                 y = y + np.sign(dy) * 1
                 err = err - 1.0
-        return grid
+    return points
