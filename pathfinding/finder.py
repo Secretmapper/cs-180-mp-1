@@ -28,7 +28,7 @@ def bfs(grid, start, end, with_expansion=False):
                 path = backtrack(grid, parents, start, end)
 
                 if with_expansion: return path, expansion
-                else: return path
+                else: return path,
             else:
                 queue.append(neighbor)
 
@@ -38,7 +38,7 @@ def dfs(grid, start, end, with_expansion=False):
       curr, path = stack.pop()
       if curr == end:
          if with_expansion: return path, visited
-         else: return path
+         else: return path,
       if curr not in visited:
          visited.append(curr)
       for neighbor in find_neighbors(grid, curr):
@@ -73,7 +73,7 @@ def astar(grid, start, end, heuristic=manhattan_distance, with_expansion=False):
           path = backtrack(grid, parents, start, end)
 
           if with_expansion: return path, expansion
-          else: return path
+          else: return path,
 
       queue.remove(curr)
 
