@@ -27,7 +27,7 @@ def bfs(grid, get_adjacent, start, end, with_expansion=False):
             else:
                 queue.append(neighbor)
 
-def dfs(grid, start, end, with_expansion=False):
+def dfs(grid, get_adjacent, start, end, with_expansion=False):
    stack, visited = [(start, [start])], []
    while stack:
       curr, path = stack.pop()
@@ -43,10 +43,7 @@ def dfs(grid, start, end, with_expansion=False):
 def manhattan_distance(p0, p1):
     return abs(p1[0] - p0[0]) + abs(p1[1] - p0[1])
 
-def exists_in_heap(heap, item):
-   return item in (x[1] for x in heap)
-
-def astar(grid, start, end, heuristic=manhattan_distance, with_expansion=False):
+def astar(grid, get_adjacent, start, end, heuristic=manhattan_distance, with_expansion=False):
    queue, visited, parents = set([start]), set(), {}
    g_cost, f_cost = {}, {}
 
