@@ -34,15 +34,24 @@ def generate_rectangle(width, height):
 def generate_line(p0, p1):
     x0, y0 = p0[0], p0[1]
     x1, y1 = p1[0], p1[1]
-    dx, dy = x1 - x0, y1- y0
-    d_err = abs(dy / dx)
-    err = 0
-    y = y0
-    grid = np.ones((abs(dy), abs(dx)))
-    for x in range(x0, x1):
-        grid[y][x] = 0
-        err = err + d_err
-        if err >= 0.5:
-            y = y + np.sign(dy) * 1
-            err = err - 1.0
-    return grid
+    dx, dy = x1 - x0, y1 - y0
+    # handle horiz/vertical line manually
+    if dx == 0 or dy == 0:
+        if dy == 0 and dx == 0:
+            return np.ones((0, 0), dtype=np.uint8)
+        elif dy == 0:
+            return np.zeros((abs(1), abs(dx)), dtype=np.uint8)
+        elif dx == 0:
+            return np.zeros((abs(dy), abs(1)), dtype=np.uint8)
+    else:
+        d_err = abs(dy / float(dx))
+        err = 0
+        y = y0
+        grid = np.ones((abs(dy), abs(dx)), dtype=np.uint8)
+        for x in range(x0, x1):
+            grid[y][x] = 0
+            err = err + d_err
+            if err >= 0.5:
+                y = y + np.sign(dy) * 1
+                err = err - 1.0
+        return grid
