@@ -14,13 +14,7 @@ def generate(width=100, height=100, polygons=[]):
             second_coord = polygon[(i + 1) % len(polygon)]
             add_points(grid, generate_line(coord, second_coord))
 
-    # pick start point
-    sx, sy = (2, 2)
-
-    # pick end point
-    ex, ey = (width - 3, height - 3)
-
-    return np.array(grid, dtype=np.uint8), (sx, sy), (ex, ey)
+    return np.array(grid, dtype=np.uint8)
 
 def add_points(grid, points):
     for coord in points:
