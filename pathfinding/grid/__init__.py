@@ -29,7 +29,7 @@ def add_points(grid, points):
 def generate_line(p0, p1):
     x0, y0 = p0[0], p0[1]
     x1, y1 = p1[0], p1[1]
-    dx, dy = x1 - x0, y1 - y0
+    dx, dy = abs(x1 - x0), abs(y1 - y0)
     points = []
     # handle horiz/vertical line manually
     if dx == 0 or dy == 0:
@@ -40,13 +40,24 @@ def generate_line(p0, p1):
         elif dx == 0:
             points = [(x0, y) for y in range(min(y0, y1), max(y0, y1) + 1)]
     else:
-        d_err = abs(dy / float(dx))
-        err = 0
-        y = y0
-        for x in range(x0, x1):
-            points.append((x, y))
-            err = err + d_err
-            if err >= 0.5:
-                y = y + np.sign(dy) * 1
-                err = err - 1.0
+        x, y = x0, y0
+        x_step = -1 if x0 > x1 else 1
+        y_step = -1 if y0 > y1 else 1
+        if dx > dy:
+            err = dx / 2.0
+            for x in range(x0, x1, x_step):
+                points.append((x, y))
+                err -= dy
+                if err < 0:
+                    y += y_step
+                    err += dx
+        else:
+            err = dy / 2.0
+            for y in range(y0, y1, y_step):
+                points.append((x, y))
+                err -= dx
+                if err < 0:
+                    x += x_step
+                    err += dy
+        points.append((x, y))
     return points
