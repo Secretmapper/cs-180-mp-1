@@ -1,6 +1,3 @@
-import heapq
-from .grid.core import find_neighbors, is_coord_walkable
-
 def backtrack(grid, parents, start, end):
     path = [end]
     while path[-1] != start:
@@ -8,7 +5,7 @@ def backtrack(grid, parents, start, end):
     path.reverse()
     return path
 
-def bfs(grid, start, end, with_expansion=False):
+def bfs(grid, get_adjacent, start, end, with_expansion=False):
     queue, visited, parents = [start], set(), {}
     if with_expansion:
         expansion = []
@@ -19,11 +16,9 @@ def bfs(grid, start, end, with_expansion=False):
         visited.add(curr)
         if with_expansion:
             expansion.append(curr)
-        for neighbor in find_neighbors(grid, curr):
+        for neighbor in get_adjacent(grid, curr):
             if neighbor not in visited:
                 parents[neighbor] = curr
-            if not is_coord_walkable(grid, neighbor):
-                continue
             if neighbor == end:
                 path = backtrack(grid, parents, start, end)
 
@@ -41,8 +36,8 @@ def dfs(grid, start, end, with_expansion=False):
          else: return path,
       if curr not in visited:
          visited.append(curr)
-      for neighbor in find_neighbors(grid, curr):
-         if neighbor not in visited and is_coord_walkable(grid, neighbor):
+      for neighbor in get_adjacent(grid, curr):
+         if neighbor not in visited:
             stack.append((neighbor, path + [neighbor]))
 
 def manhattan_distance(p0, p1):
@@ -85,10 +80,8 @@ def astar(grid, start, end, heuristic=manhattan_distance, with_expansion=False):
       if with_expansion:
          expansion.append(curr)
 
-      for neighbor in find_neighbors(grid, curr):
+      for neighbor in get_adjacent(grid, curr):
          if neighbor in visited:
-            continue
-         if not is_coord_walkable(grid, neighbor):
             continue
 
          g = g_cost[curr] + manhattan_distance(curr, neighbor)
