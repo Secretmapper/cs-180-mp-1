@@ -1,6 +1,6 @@
 import numpy as np
 
-def generate(width=100, height=100):
+def generate(width=100, height=100, polygons=[]):
     grid = np.ones((height, width), dtype=np.uint8)
 
     # make border
@@ -9,11 +9,10 @@ def generate(width=100, height=100):
     add_points(grid, generate_line((width - 1, height - 1), (0, height - 1)))
     add_points(grid, generate_line((0, height - 1), (0, 0)))
 
-    add_points(grid, generate_line((3,3), (5,3)))
-    add_points(grid, generate_line((5,3), (5,5)))
-    add_points(grid, generate_line((5,5), (3,5)))
-    add_points(grid, generate_line((3,5), (3,3)))
-
+    for polygon in polygons:
+        for i, coord in enumerate(polygon):
+            second_coord = polygon[(i + 1) % len(polygon)]
+            add_points(grid, generate_line(coord, second_coord))
 
     # pick start point
     sx, sy = (2, 2)
