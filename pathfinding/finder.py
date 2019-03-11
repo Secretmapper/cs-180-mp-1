@@ -39,25 +39,36 @@ def exists_in_heap(heap, item):
    return item in (x[1] for x in heap)
 
 def astar(grid, start, end, heuristic=manhattan_distance, with_expansion=False):
-   queue, visited, parents = [(0, start)], set(), {}
-   g_cost = {}
+   queue, visited, parents = set([start]), set(), {}
+   g_cost, f_cost = {}, {}
 
    g_cost[start] = 0
+   f_cost[start] = heuristic(start, end)
 
    if with_expansion:
       expansion = []
    while queue:
-      cost, curr = heapq.heappop(queue)
+      curr = None
+      curr_score = None
+      # TODO: Turn this into a priority queue?
+      for coord in queue:
+         if curr == None or f_cost[coord] < curr_score:
+            curr_score = f_cost[coord]
+            curr = coord
+
       if curr == end:
           path = backtrack(grid, parents, start, end)
 
           if with_expansion: return path, expansion
           else: return path
 
+      queue.remove(curr)
+
       if curr in visited:
          continue
 
       visited.add(curr)
+
       if with_expansion:
          expansion.append(curr)
 
@@ -69,10 +80,11 @@ def astar(grid, start, end, heuristic=manhattan_distance, with_expansion=False):
 
          g = g_cost[curr] + manhattan_distance(curr, neighbor)
 
-         if neighbor not in g_cost or g < g_cost[neighbor]:
-            g_cost[neighbor] = g
-            f_cost = g + heuristic(neighbor, end)
-            heapq.heappush(queue, (f_cost, neighbor))
-            parents[neighbor] = curr
-         elif neighbor in g_cost and g > g_cost[neighbor]:
+         if neighbor not in queue:
+            queue.add(neighbor)
+         elif g >= g_cost[neighbor]:
             continue
+
+         parents[neighbor] = curr
+         g_cost[neighbor] = g
+         f_cost[neighbor] = g + heuristic(neighbor, end)
