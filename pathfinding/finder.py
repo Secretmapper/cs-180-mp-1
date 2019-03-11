@@ -43,7 +43,7 @@ def dfs(grid, get_adjacent, start, end, with_expansion=False):
 def manhattan_distance(p0, p1):
     return abs(p1[0] - p0[0]) + abs(p1[1] - p0[1])
 
-def astar(grid, get_adjacent, start, end, heuristic=manhattan_distance, with_expansion=False):
+def astar(grid, get_adjacent, start, end, cost=manhattan_distance, heuristic=manhattan_distance, with_expansion=False):
    queue, visited, parents = set([start]), set(), {}
    g_cost, f_cost = {}, {}
 
@@ -81,7 +81,7 @@ def astar(grid, get_adjacent, start, end, heuristic=manhattan_distance, with_exp
          if neighbor in visited:
             continue
 
-         g = g_cost[curr] + manhattan_distance(curr, neighbor)
+         g = g_cost[curr] + cost(curr, neighbor)
 
          if neighbor not in queue:
             queue.add(neighbor)
