@@ -32,6 +32,19 @@ def bfs(grid, start, end, with_expansion=False):
             else:
                 queue.append(neighbor)
 
+def dfs(grid, start, end, with_expansion=False):
+   stack, visited = [(start, [start])], []
+   while stack:
+      curr, path = stack.pop()
+      if curr == end:
+         if with_expansion: return path, visited
+         else: return path
+      if curr not in visited:
+         visited.append(curr)
+      for neighbor in find_neighbors(grid, curr):
+         if neighbor not in visited and is_coord_walkable(grid, neighbor):
+            stack.append((neighbor, path + [neighbor]))
+
 def manhattan_distance(p0, p1):
     return abs(p1[0] - p0[0]) + abs(p1[1] - p0[1])
 
