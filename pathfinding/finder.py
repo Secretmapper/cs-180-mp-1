@@ -5,7 +5,8 @@ def backtrack(grid, parents, start, end):
     path.reverse()
     return path
 
-def bfs(grid, get_adjacent, start, end, with_expansion=False):
+def bfs(grid, get_adjacent, start, end, with_expansion=False, with_expansion_num=False):
+    expansion_num = 0
     queue, visited, parents = [start], set(), {}
     if with_expansion:
         expansion = []
@@ -16,6 +17,8 @@ def bfs(grid, get_adjacent, start, end, with_expansion=False):
         visited.add(curr)
         if with_expansion:
             expansion.append(curr)
+        if with_expansion_num:
+           expansion_num += 1
         for neighbor in get_adjacent(grid, curr):
             if neighbor not in visited:
                 parents[neighbor] = curr
@@ -23,16 +26,18 @@ def bfs(grid, get_adjacent, start, end, with_expansion=False):
                 path = backtrack(grid, parents, start, end)
 
                 if with_expansion: return path, expansion
+                elif with_expansion_num: return path, expansion_num
                 else: return path,
             else:
                 queue.append(neighbor)
 
-def dfs(grid, get_adjacent, start, end, with_expansion=False):
+def dfs(grid, get_adjacent, start, end, with_expansion=False, with_expansion_num=False):
    stack, visited = [(start, [start])], []
    while stack:
       curr, path = stack.pop()
       if curr == end:
          if with_expansion: return path, visited
+         elif with_expansion_num: return path, len(visited)
          else: return path,
       if curr not in visited:
          visited.append(curr)
@@ -43,7 +48,8 @@ def dfs(grid, get_adjacent, start, end, with_expansion=False):
 def manhattan_distance(p0, p1):
     return abs(p1[0] - p0[0]) + abs(p1[1] - p0[1])
 
-def astar(grid, get_adjacent, start, end, cost=manhattan_distance, heuristic=manhattan_distance, with_expansion=False):
+def astar(grid, get_adjacent, start, end, cost=manhattan_distance, heuristic=manhattan_distance, with_expansion=False, with_expansion_num=False):
+   expansion_num = 0
    queue, visited, parents = set([start]), set(), {}
    g_cost, f_cost = {}, {}
 
@@ -65,6 +71,7 @@ def astar(grid, get_adjacent, start, end, cost=manhattan_distance, heuristic=man
           path = backtrack(grid, parents, start, end)
 
           if with_expansion: return path, expansion
+          elif with_expansion_num: return path, expansion_num
           else: return path,
 
       queue.remove(curr)
@@ -76,6 +83,8 @@ def astar(grid, get_adjacent, start, end, cost=manhattan_distance, heuristic=man
 
       if with_expansion:
          expansion.append(curr)
+      if with_expansion_num:
+         expansion_num += 1
 
       for neighbor in get_adjacent(grid, curr):
          if neighbor in visited:
