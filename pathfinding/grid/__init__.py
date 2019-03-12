@@ -39,19 +39,21 @@ def generate_line(p0, p1):
         y_step = -1 if y0 > y1 else 1
         if dx > dy:
             err = dx / 2.0
-            for x in range(x0, x1, x_step):
+            while x != x1:
                 points.append((x, y))
                 err -= dy
                 if err < 0:
                     y += y_step
                     err += dx
+                x += x_step
         else:
             err = dy / 2.0
-            for y in range(y0, y1, y_step):
+            while y != y1:
                 points.append((x, y))
                 err -= dx
                 if err < 0:
                     x += x_step
                     err += dy
+                y += y_step      
         points.append((x, y))
     return points
