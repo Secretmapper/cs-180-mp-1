@@ -42,3 +42,33 @@ def generate_image(grid, start, end, path=[], expansion=[]):
     # display end
     img_array[end[1], end[0]] = [255, 0, 0]
     return img_array
+
+def generate_text_map(x):
+    if x == 0:
+        return "="
+    elif x == 1:
+        return " "
+    if x == 4:
+        return "*"
+    if x == 5:
+        return "@"
+    elif x == 2:
+        return "S"
+    elif x == 3:
+        return "E"
+    else:
+        return str(x)
+
+def generate_text(grid, start, end, path=[], expansion=[]):
+    maze = np.copy(grid)
+
+    for coord in expansion:
+        maze[coord[1]][coord[0]] = 5
+        
+    for coord in path:
+        maze[coord[1]][coord[0]] = 4
+
+    maze[start[1]][start[0]] = 2
+    maze[end[1]][end[0]] = 3
+
+    return np.array2string(maze, formatter={'int': generate_text_map})
