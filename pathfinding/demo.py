@@ -15,11 +15,22 @@ def get_case_files():
    cases = []
    for path in paths:
       case = open(path, 'r').read().splitlines()
+
+      polygon_str = '['
+      for line in case[2:]:
+         if not(line) or line == '\n':
+            continue
+         if not line == case[2]:
+            polygon_str += ','
+         polygon_str += '[' + str(line) + ']'
+      polygon_str += ']'
+
       cases.append((
          ast.literal_eval(case[0]),
          ast.literal_eval(case[1]),
-         ast.literal_eval(case[2])
+         ast.literal_eval(polygon_str)
       ))
+
    return cases
 
 def cost(p0, p1): return 1
